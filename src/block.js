@@ -38,8 +38,7 @@ class Block {
     validate() {
         const self = this;
         return new Promise((resolve, reject) => {
-            const recalculatedHash = self.calculateHash();
-            resolve(self.hash === recalculatedHash);
+            resolve(self.hash === self.calculateHash());
         });
     }
 
@@ -65,13 +64,10 @@ class Block {
     }
 
     calculateHash() {
-        const currectHash = this.hash;
-        this.hash = null;
-
-        const newHash = SHA256(JSON.stringify(this)).toString();
-        this.hash = currectHash;
-
-        return newHash;
+        return SHA256(JSON.stringify({
+            ...this,
+            'hash': null
+        })).toString();
     }
 }
 
